@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-puts "Started loading ComfyArchive (comfy_archive.rb)"
-
 require_relative "comfy_archive/version"
 require_relative "comfy_archive/engine"
 require_relative "comfy_archive/configuration"
@@ -29,5 +27,3 @@ module ComfyArchive
   end
 
 end
-
-puts "Finished loading ComfyArchive (comfy_archive.rb)"

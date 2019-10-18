@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-puts "Started loading ComfyArchive (engine.rb)"
-
 #require "rubygems"
 require "rails"
 require "comfortable_mexican_sofa"
@@ -32,5 +30,3 @@ module ComfyArchive
   end
 
 end
-
-puts "Finished loading ComfyArchive (engine.rb)"

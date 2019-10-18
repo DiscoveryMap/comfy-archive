@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-puts "Started loading ComfyArchive (configuration.rb)"
-
 module ComfyArchive
   class Configuration
 
@@ -15,5 +13,3 @@ module ComfyArchive
 
   end
 end
-
-puts "Finished loading ComfyArchive (configuration.rb)"
