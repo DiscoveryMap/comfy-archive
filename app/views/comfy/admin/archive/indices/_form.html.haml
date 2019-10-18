@@ -1,0 +1,10 @@
+= comfy_admin_partial "comfy/admin/archive/partials/index_form_before", form: form
+
+= form.text_field :label
+= form.text_field :datetime_fragment
+
+= comfy_admin_partial "comfy/admin/archive/partials/index_form_after", form: form
+
+= form.form_actions do
+  = submit_tag t(@index.new_record? ? ".create" : ".update"), class: "btn btn-primary ml-sm-1", data: {disable_with: false}
+  = link_to t(".cancel"), comfy_admin_archive_indices_path(@site, @index), class: "btn btn-link"

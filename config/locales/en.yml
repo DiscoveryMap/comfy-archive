@@ -1,0 +1,57 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
+en:
+  # ComfyArchive
+  activerecord:
+    models:
+      comfy/archive/index: Post
+    attributes:
+      comfy/archive/index:
+        label: Label
+        datetime_fragment: DateTime Fragment
+  comfy:
+    admin:
+      cms:
+        base:
+          archives: Archive Sections
+      archive:
+        indices:
+          created: Archive Index created
+          create_failure: Failed to create Archive Index
+          updated: Archive Index updated
+          update_failure: Failed to update Archive Index
+          deleted: Archive Index removed
+          not_found: Archive Index not found
+          index:
+            title: Archive Indices
+            new_link: New Archive Index
+            edit: Edit
+            delete: Delete
+            are_you_sure: Are you sure?
+          new:
+            title: New Archive Index
+          edit:
+            title: Edit Archive Index
+          form:
+            create: Create Index
+            update: Update Index
+            cancel: Cancel

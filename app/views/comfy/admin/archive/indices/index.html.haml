@@ -1,0 +1,29 @@
+.page-header
+  = link_to t('.new_link'), new_comfy_admin_archive_index_path(@site), class: 'btn btn-secondary float-right'
+  %h2= t('.title')
+
+= comfy_admin_partial "comfy/admin/blog/partials/indices_before"
+
+= comfy_paginate @indices
+
+%ul.list
+  - @indices.each do |index|
+    %li
+      .row
+        .col-md-8.item
+          .item-content
+            .item-title
+              = link_to index.label, edit_comfy_admin_archive_index_path(@site, index)
+            .item-meta
+              -# link = index.url
+              =# link_to link, link, target: "_blank"
+              %br
+
+        .col-md-4.d-flex.align-items-center.justify-content-md-end
+          .btn-group.btn-group-sm
+            = link_to t('.edit'), edit_comfy_admin_archive_index_path(@site, index), class: 'btn btn-outline-secondary'
+            = link_to t('.delete'), comfy_admin_archive_index_path(@site, index), method: :delete, data: {confirm: t('.are_you_sure')}, class: 'btn btn-danger'
+
+= comfy_paginate @indices
+
+= comfy_admin_partial "comfy/admin/blog/partials/indices_after"
