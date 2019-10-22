@@ -32,7 +32,7 @@ en:
     admin:
       cms:
         base:
-          archives: Archive Sections
+          archives: Archives
       archive:
         indices:
           created: Archive Index created

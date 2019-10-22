@@ -11,5 +11,8 @@ class Comfy::Archive::Index < ApplicationRecord
   # -- Validations -------------------------------------------------------------
   validates :label, :datetime_fragment,
     presence:   true
+  validates :page,
+    presence:   true,
+    uniqueness: { scope: :page_id }
 
 end

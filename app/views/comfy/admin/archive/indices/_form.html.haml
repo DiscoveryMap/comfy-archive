@@ -1,6 +1,10 @@
 = comfy_admin_partial "comfy/admin/archive/partials/index_form_before", form: form
 
 = form.text_field :label
+
+- if (options = ::Comfy::Cms::Page.options_for_select(site: @site, current_page: @index.page_id, exclude_self: true)).present?
+  = form.select :page_id, options, bootstrap: {custom_control: true}
+
 = form.text_field :datetime_fragment
 
 = comfy_admin_partial "comfy/admin/archive/partials/index_form_after", form: form
