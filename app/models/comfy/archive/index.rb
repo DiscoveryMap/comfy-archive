@@ -15,4 +15,9 @@ class Comfy::Archive::Index < ApplicationRecord
     presence:   true,
     uniqueness: { scope: :page_id }
 
+  # -- Instance Mathods --------------------------------------------------------
+  def url(relative: false)
+    page.url(relative: relative)
+  end
+
 end

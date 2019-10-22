@@ -15,8 +15,8 @@
             .item-title
               = link_to index.label, edit_comfy_admin_archive_index_path(@site, index)
             .item-meta
-              -# link = index.url
-              =# link_to link, link, target: "_blank"
+              - link = index.url
+              = link_to link, link, target: "_blank"
               %br
 
         .col-md-4.d-flex.align-items-center.justify-content-md-end
