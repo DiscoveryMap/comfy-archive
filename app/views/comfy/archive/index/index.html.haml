@@ -1,0 +1,8 @@
+- @archive_pages.each do |page|
+
+  %h2
+    = link_to page.label, page.url
+  .date
+    = page.published_at(@cms_index.datetime_fragment).to_s(:db)
+
+= comfy_paginate @archive_pages
