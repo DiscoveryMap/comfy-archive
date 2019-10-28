@@ -13,7 +13,8 @@
   %li
     - date = [I18n.t("date.month_names")[month.to_i], year].join(" ")
     - site_path = @cms_site.url(relative: true)
-    = date
+    =# link_to date, comfy_archive_pages_of_month_path(site_path, year: year, month: month)
+    = link_to date, "#{@cms_index.url(relative: true)}/#{year}/#{month}"
 
 %h3 Categories
 - @cms_index.categories(true).each do |category|
