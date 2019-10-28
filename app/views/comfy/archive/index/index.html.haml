@@ -6,3 +6,16 @@
     = page.published_at(@cms_index.datetime_fragment).to_s(:db)
 
 = comfy_paginate @archive_pages
+
+%h3 Archives
+- dates = @cms_index.children(true).chronologically(@cms_index.datetime_fragment).group(:year, :month).unscope(:order).order(year: :desc, month: :desc).pluck("YEAR(comfy_cms_fragments.datetime) as year, MONTH(comfy_cms_fragments.datetime) as month")
+- dates.each do |(year, month)|
+  %li
+    - date = [I18n.t("date.month_names")[month.to_i], year].join(" ")
+    - site_path = @cms_site.url(relative: true)
+    = date
+
+%h3 Categories
+- @cms_index.categories(true).each do |category|
+  - site_path = @cms_site.url(relative: true)
+  = category.label

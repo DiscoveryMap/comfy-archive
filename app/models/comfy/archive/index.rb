@@ -20,4 +20,17 @@ class Comfy::Archive::Index < ApplicationRecord
     page.url(relative: relative)
   end
 
+  def children(published = false)
+    if published
+      page.children.published
+    else
+      page.children
+    end
+  end
+
+  def categories(published = false)
+    category_ids = Comfy::Cms::Categorization.where(categorized_type: "Comfy::Cms::Page", categorized_id: self.children(published)).pluck(:category_id).uniq!
+    Comfy::Cms::Category.where(id: category_ids)
+  end
+
 end

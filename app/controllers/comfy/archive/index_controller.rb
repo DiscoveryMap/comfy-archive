@@ -11,7 +11,7 @@ class Comfy::Archive::IndexController < Comfy::Cms::ContentController
     unless @cms_index && @cms_index.page == @cms_page
       show
     else
-      scope = @cms_index.page.children.chronologically(@cms_index.datetime_fragment)
+      scope = @cms_index.children(true).chronologically(@cms_index.datetime_fragment)
 
       @archive_pages = comfy_paginate(scope, per_page: ComfyArchive.config.posts_per_page)
       render layout: app_layout
