@@ -15,6 +15,8 @@ class Comfy::Archive::IndexController < Comfy::Cms::ContentController
       if params[:year]
         scope = scope.for_year(@cms_index.datetime_fragment, params[:year])
         scope = scope.for_month(@cms_index.datetime_fragment, params[:month]) if params[:month]
+      elsif params[:category]
+        scope = scope.for_category(params[:category]).distinct(false)
       end
 
       @archive_pages = comfy_paginate(scope, per_page: ComfyArchive.config.posts_per_page)

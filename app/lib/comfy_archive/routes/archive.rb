@@ -9,6 +9,7 @@ class ActionDispatch::Routing::Mapper
           o.get "*cms_path/:year",        to: "index#index", as: :pages_of_year
           o.get "*cms_path/:year/:month", to: "index#index", as: :pages_of_month
         end
+        get "*cms_path/:category",        to: "index#index", as: :pages_of_category
         get "(*cms_path)" => "index#index", as: "render_page", action: "/:format"
       end
     end

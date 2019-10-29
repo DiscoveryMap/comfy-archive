@@ -22,7 +22,7 @@ module ComfyArchive
 
     extend ActiveSupport::Concern
     included do
-      scope :chronologically, ->(datetime_fragment) { joins(:fragments).where(comfy_cms_fragments: {identifier: datetime_fragment}).unscope(:order).order(Arel.sql("`comfy_cms_fragments`.`datetime` DESC")) }
+      scope :chronologically, ->(datetime_fragment) { joins(:fragments).where(comfy_cms_fragments: {identifier: datetime_fragment}).reorder(Arel.sql("`comfy_cms_fragments`.`datetime` DESC")) }
       scope :for_year, ->(datetime_fragment, year) { chronologically(datetime_fragment).where("YEAR(comfy_cms_fragments.datetime) = ?", year) }
       scope :for_month, ->(datetime_fragment, month) { chronologically(datetime_fragment).where("MONTH(comfy_cms_fragments.datetime) = ?", month) }
 
