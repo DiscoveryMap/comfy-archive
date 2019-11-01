@@ -1,6 +1,6 @@
 # ComfyArchive
 
-ComfyArchive is a management engine for chronologically & categorically archived sections for [Comfortable Mexican Sofa](https://github.com/comfy/comfortable-mexican-sofa). You can select one or more Comfortable Mexican Sofa pages to act as an index for child pages, which will then be organized both cronologically, by year and month, and by category.
+ComfyArchive is a management engine for chronologically & categorically archived sections for [Comfortable Mexican Sofa](https://github.com/comfy/comfortable-mexican-sofa) 2.x. You can select one or more Comfortable Mexican Sofa pages to act as an index for child pages, which will then be organized both cronologically, by year and month, and by category.
 
 ## Dependencies
 
@@ -8,12 +8,22 @@ Make sure that you have [ComfortableMexicanSofa](https://github.com/comfy/comfor
 
 ## Installation
 
-1) Add the following lines to your `config/routes.rb` file, after the "`comfy_route :cms_admin`" line and before the "`comfy_route :cms`" line:
+1) Add gem definition to your Gemfile:
+
+    gem "comfy_archive", "~> 0.1.0"
+
+2) From your Rails project's root run:
+
+    bundle install
+    rails generate comfy:archive
+    rake db:migrate
+
+3) Add the following lines to your `config/routes.rb` file, after the "`comfy_route :cms_admin`" line and before the "`comfy_route :cms`" line:
 
     comfy_route :archive_admin
     comfy_route :archive
 
-3) You should also find view templates in your `/app/views/comfy/archive` folder. Feel free to adjust them as you see fit.
+4) You should also find view templates in your `/app/views/comfy/archive` folder. Feel free to adjust them as you see fit.
 
 ## Configuration
 
