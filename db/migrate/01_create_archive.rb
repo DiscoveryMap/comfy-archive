@@ -1,4 +1,4 @@
-class CreateArchive < ActiveRecord::Migration[6.0]
+class CreateArchive < ActiveRecord::Migration[5.2]
   def change
     create_table :comfy_archive_indices do |t|
       t.integer :site_id,           null: false
