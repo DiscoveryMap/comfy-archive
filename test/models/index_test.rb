@@ -27,9 +27,9 @@ class ArchiveIndicesTest < ActiveSupport::TestCase
   end
 
   def test_validations
-    post = Comfy::Archive::Index.new
-    assert post.invalid?
-    assert_errors_on post, :site, :label, :page, :datetime_fragment
+    index = Comfy::Archive::Index.new
+    assert index.invalid?
+    assert_errors_on index, :site, :label, :page, :datetime_fragment
   end
 
   def test_validation_of_page_uniqueness
@@ -60,6 +60,14 @@ class ArchiveIndicesTest < ActiveSupport::TestCase
   def test_children
     assert_equal @index.children, @page.children
     assert_equal @index.children(true), @page.children.published
+
+    assert_equal 2, @index.children.count
+    assert_equal 1, @index.children(true).count
+  end
+
+  def test_categories
+    assert_equal 1, @index.categories.count
+    assert_equal 0, @index.categories(true).count
   end
 
 end

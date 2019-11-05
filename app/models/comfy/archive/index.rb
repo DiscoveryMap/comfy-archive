@@ -29,7 +29,7 @@ class Comfy::Archive::Index < ActiveRecord::Base
   end
 
   def categories(published = false)
-    category_ids = Comfy::Cms::Categorization.where(categorized_type: "Comfy::Cms::Page", categorized_id: self.children(published)).pluck(:category_id).uniq!
+    category_ids = Comfy::Cms::Categorization.where(categorized_type: "Comfy::Cms::Page", categorized_id: self.children(published)).pluck(:category_id).uniq
     Comfy::Cms::Category.where(id: category_ids)
   end
 

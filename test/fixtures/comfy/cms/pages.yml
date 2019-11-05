@@ -6,7 +6,7 @@ default:
   label: Default Page
   slug:
   full_path: '/'
-  children_count: 1
+  children_count: 2
   position: 0
   is_published: true
   content_cache:
@@ -22,3 +22,15 @@ child:
   children_count: 0
   position: 0
   is_published: true
+
+unpublished_child:
+  site: default
+  parent: default
+  target_page:
+  layout: default
+  label: Unpublished Child Page
+  slug: 'unpublished-child-page'
+  full_path: '/unpublished-child-page'
+  children_count: 0
+  position: 1
+  is_published: false
