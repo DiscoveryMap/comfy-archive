@@ -5,6 +5,7 @@ default:
   parent:
   content: |-
     {{cms:textarea content}}
+    {{cms:datetime publish_date}}
   css: default_css
   js: default_js
   position: 0

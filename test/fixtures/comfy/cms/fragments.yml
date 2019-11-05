@@ -1,0 +1,13 @@
+child_datetime:
+  record: child (Comfy::Cms::Page)
+  identifier: publish_date
+  tag: datetime
+  content:
+  datetime: <%= DateTime.parse("1981-10-04 12:34:56") %>
+
+unpublished_child_datetime:
+  record: unpublished_child (Comfy::Cms::Page)
+  identifier: publish_date
+  tag: datetime
+  content:
+  datetime: <%= DateTime.parse("1981-10-06 12:34:56") %>
