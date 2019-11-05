@@ -1,0 +1,10 @@
+default:
+  site: default
+  label: Default Layout
+  identifier: default
+  parent:
+  content: |-
+    {{cms:textarea content}}
+  css: default_css
+  js: default_js
+  position: 0

@@ -1,4 +1,4 @@
-class Comfy::Archive::Index < ApplicationRecord
+class Comfy::Archive::Index < ActiveRecord::Base
 
   self.table_name = "comfy_archive_indices"
 

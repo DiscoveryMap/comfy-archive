@@ -1,0 +1,5 @@
+default:
+  site: default
+  label: Default Archive Index
+  page: default
+  datetime_fragment: publish_date
