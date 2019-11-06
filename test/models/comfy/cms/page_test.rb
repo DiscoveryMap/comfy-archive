@@ -19,4 +19,14 @@ class CmsPagesTests < ActiveSupport::TestCase
     assert_equal chronologically.last, @page.children.first
   end
 
+  def test_scope_for_year
+    assert_equal 2, Comfy::Cms::Page.for_year("publish_date", 1981).count
+    assert_equal 0, Comfy::Cms::Page.for_year("publish_date", 1982).count
+  end
+
+  def test_scope_for_month
+    assert_equal 2, Comfy::Cms::Page.for_month("publish_date", 10).count
+    assert_equal 0, Comfy::Cms::Page.for_month("publish_date", 11).count
+  end
+
 end
