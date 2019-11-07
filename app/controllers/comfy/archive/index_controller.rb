@@ -1,3 +1,5 @@
+require 'cgi'
+
 class Comfy::Archive::IndexController < Comfy::Cms::ContentController
 
   include Comfy::Paginate
@@ -13,10 +15,15 @@ class Comfy::Archive::IndexController < Comfy::Cms::ContentController
     else
       scope = @cms_index.children(true).chronologically(@cms_index.datetime_fragment)
       if params[:year]
-        scope = scope.for_year(@cms_index.datetime_fragment, params[:year])
-        scope = scope.for_month(@cms_index.datetime_fragment, params[:month]) if params[:month]
+        @year = params[:year]
+        scope = scope.for_year(@cms_index.datetime_fragment, @year)
+        if params[:month]
+          @month = params[:month]
+          scope = scope.for_month(@cms_index.datetime_fragment, @month)
+        end
       elsif params[:category]
-        scope = scope.for_category(params[:category]).distinct(false)
+        @category = CGI.unescape(params[:category])
+        scope = scope.for_category(@category).distinct(false)
       end
 
       @archive_pages = comfy_paginate(scope, per_page: ComfyArchive.config.posts_per_page)
