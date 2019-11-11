@@ -29,4 +29,8 @@ class CmsPagesTests < ActiveSupport::TestCase
     assert_equal 0, Comfy::Cms::Page.for_month("publish_date", 11).count
   end
 
+  def test_published_at
+    assert_equal @page.children.first.published_at("publish_date"), "1981-10-04 12:34:56"
+  end
+
 end
