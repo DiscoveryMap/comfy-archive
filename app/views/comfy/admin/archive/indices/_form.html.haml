@@ -2,7 +2,7 @@
 
 = form.text_field :label
 
-- if (options = ::Comfy::Cms::Page.options_for_select(site: @site, current_page: @index.page_id, exclude_self: true)).present?
+- if (options = ::Comfy::Cms::Page.options_for_select(site: @site, current_page: @index.page, exclude_self: false)).present?
   = form.select :page_id, options, bootstrap: {custom_control: true}
 
 = form.text_field :datetime_fragment
