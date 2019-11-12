@@ -14,7 +14,13 @@
 = comfy_paginate @archive_pages
 
 %h4 Archives
-- dates = @cms_index.children(true).chronologically(@cms_index.datetime_fragment).group(:year, :month).unscope(:order).order(year: :desc, month: :desc).pluck("YEAR(comfy_cms_fragments.datetime) as year, MONTH(comfy_cms_fragments.datetime) as month")
+- case ActiveRecord::Base.connection.adapter_name.downcase.to_sym
+- when :mysql, :mysql2
+  - dates = @cms_index.children(true).chronologically(@cms_index.datetime_fragment).group(:year, :month).unscope(:order).order(year: :desc, month: :desc).pluck(Arel.sql("YEAR(comfy_cms_fragments.datetime) as year, MONTH(comfy_cms_fragments.datetime) as month"))
+- when :sqlite
+  - dates = @cms_index.children(true).chronologically(@cms_index.datetime_fragment).group(:year, :month).unscope(:order).order(year: :desc, month: :desc).pluck(Arel.sql("strftime('%Y', comfy_cms_fragments.datetime) as year, strftime('%m', comfy_cms_fragments.datetime) as month"))
+- else
+  - raise NotImplementedError, "Unknown adapter type '#{ActiveRecord::Base.connection.adapter_name}'"
 - dates.each do |(year, month)|
   %li
     - date = [I18n.t("date.month_names")[month.to_i], year].join(" ")

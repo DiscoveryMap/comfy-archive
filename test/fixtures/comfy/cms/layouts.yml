@@ -4,8 +4,10 @@ default:
   identifier: default
   parent:
   content: |-
+    <p>
+    Published on: {{cms:datetime publish_date}}
+    </p>
     {{cms:textarea content}}
-    {{cms:datetime publish_date}}
   css: default_css
   js: default_js
   position: 0

@@ -29,7 +29,7 @@ Make sure that you have [ComfortableMexicanSofa](https://github.com/comfy/comfor
 
 1) Add a `datetime` tag to the layout used by any page which will be ordered chronologically under an index page, then set the field to a valid date & time in the pages themselves.
 
-2) Add a new Archive Index, selecting the parent page which will act as an index for child pages and enter the name of the `datetime` tag you created in Step 1
+2) Add a new Archive Index, selecting the parent page (_Important_: can not be the root page!) which will act as an index for child pages and enter the name of the `datetime` tag you created in Step 1
 
 ## Architecture
 

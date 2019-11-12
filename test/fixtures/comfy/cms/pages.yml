@@ -5,7 +5,7 @@ default:
   layout: default
   label: Default Page
   slug:
-  full_path: '/'
+  full_path: '/blog'
   children_count: 2
   position: 0
   is_published: true
@@ -18,7 +18,7 @@ child:
   layout: default
   label: Child Page
   slug: 'child-page'
-  full_path: '/child-page'
+  full_path: '/blog/child-page'
   children_count: 0
   position: 0
   is_published: true
@@ -30,7 +30,7 @@ unpublished_child:
   layout: default
   label: Unpublished Child Page
   slug: 'unpublished-child-page'
-  full_path: '/unpublished-child-page'
+  full_path: '/blog/unpublished-child-page'
   children_count: 0
   position: 1
   is_published: false
