@@ -5,6 +5,7 @@ class CreateArchive < ActiveRecord::Migration[5.2]
       t.string  :label,             null: false
       t.string  :datetime_fragment, null: false
       t.integer :page_id,           null: false
+      t.boolean :force_render_page, null: false, default: false
 
       t.timestamps
     end
