@@ -10,7 +10,7 @@ Make sure that you have [ComfortableMexicanSofa](https://github.com/comfy/comfor
 
 1) Add gem definition to your Gemfile:
 
-    gem "comfy_archive", "~> 0.1.0"
+    gem "comfy_archive", "~> 0.1.1"
 
 2) From your Rails project's root run:
 
