@@ -32,16 +32,23 @@ class Comfy::Archive::IndexControllerTest < ActionDispatch::IntegrationTest
     comfy_cms_pages(:child).update_column(:is_published, false)
     get @index.url(relative: true)
     assert_response :success
+    assert_template :index
     assert_equal 0, assigns(:archive_pages).size
   end
 
   def test_get_index_for_month_archive
     get comfy_archive_pages_of_month_path(@index.url(relative: true), 1981, 10)
     assert_response :success
+    assert_template :index
+    assert_equal "1981", assigns(:year)
+    assert_equal "10", assigns(:month)
     assert_equal 1, assigns(:archive_pages).size
 
     get comfy_archive_pages_of_month_path(@index.url(relative: true), 2012, 12)
     assert_response :success
+    assert_template :index
+    assert_equal "2012", assigns(:year)
+    assert_equal "12", assigns(:month)
     assert_equal 0, assigns(:archive_pages).size
   end
 
@@ -51,6 +58,8 @@ class Comfy::Archive::IndexControllerTest < ActionDispatch::IntegrationTest
     get comfy_archive_pages_of_category_path(@index.url(relative: true), @category.label)
 
     assert_response :success
+    assert_template :index
+    assert_equal @category.label, assigns(:category)
     assert assigns(:archive_pages)
     assert_equal 1, assigns(:archive_pages).count
     assert assigns(:archive_pages).first.categories.member? @category
@@ -59,6 +68,8 @@ class Comfy::Archive::IndexControllerTest < ActionDispatch::IntegrationTest
   def test_get_index_with_category_invalid
     get comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid")
     assert_response :success
+    assert_template :index
+    assert_equal "invalid", assigns(:category)
     assert assigns(:archive_pages)
     assert_equal 0, assigns(:archive_pages).count
   end
@@ -85,6 +96,54 @@ class Comfy::Archive::IndexControllerTest < ActionDispatch::IntegrationTest
     assert assigns(:archive_pages)
     assert_equal 2, assigns(:archive_pages).count
     assert_equal [new_page, @index.children.first], assigns(:archive_pages).to_a
+  end
+
+  def test_get_index_with_force_render_page
+    @index.update_column(:force_render_page, true)
+    @index.page.fragments.create!(
+      identifier: "content",
+      tag:        "text",
+      content:    "page content"
+    )
+
+    expected = <<~HTML.strip
+      <p>
+      Published on: 
+      </p>
+      page content
+    HTML
+
+    get @index.url(relative: true)
+    assert_response :success
+    assert_template nil
+    assert_equal expected, response.body
+    assert assigns(:cms_index)
+    assert assigns(:archive_pages)
+    assert_equal 1, assigns(:archive_pages).size
+  end
+
+  def test_get_index_with_force_render_page_for_month_archive
+    @index.update_column(:force_render_page, true)
+    get comfy_archive_pages_of_month_path(@index.url(relative: true), 1981, 10)
+    assert_template nil
+    assert assigns(:cms_index)
+    assert assigns(:year)
+    assert assigns(:month)
+    assert assigns(:archive_pages)
+    assert_equal 1, assigns(:archive_pages).size
+  end
+
+  def test_get_index_with_force_render_page_with_category
+    @index.update_column(:force_render_page, true)
+    @category.categorizations.create!(categorized: @index.children.first)
+
+    get comfy_archive_pages_of_category_path(@index.url(relative: true), @category.label)
+    assert_template nil
+    assert assigns(:cms_index)
+    assert assigns(:category)
+    assert assigns(:archive_pages)
+    assert_equal 1, assigns(:archive_pages).count
+    assert assigns(:archive_pages).first.categories.member? @category
   end
 
   def test_get_show
