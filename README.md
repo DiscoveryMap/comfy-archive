@@ -2,6 +2,8 @@
 
 ComfyArchive is a management engine for chronologically & categorically archived sections for [Comfortable Mexican Sofa](https://github.com/comfy/comfortable-mexican-sofa) 2.x. You can select one or more Comfortable Mexican Sofa pages to act as an index for child pages, which will then be organized both cronologically, by year and month, and by category.
 
+[![Gem Version](https://badge.fury.io/rb/comfy_archive.svg)](https://badge.fury.io/rb/comfy_archive)
+
 ## Dependencies
 
 Make sure that you have [ComfortableMexicanSofa](https://github.com/comfy/comfortable-mexican-sofa) installed first.
