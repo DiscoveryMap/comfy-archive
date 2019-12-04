@@ -19,15 +19,6 @@ class Comfy::Archive::IndexControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, assigns(:archive_pages).size
   end
 
-  def test_get_index_as_rss
-    get @index.url(relative: true), params: { format: :rss }
-    assert_response :success
-    assert_template :index
-    assert assigns(:cms_index)
-    assert assigns(:archive_pages)
-    assert_equal 1, assigns(:archive_pages).size
-  end
-
   def test_get_index_with_unpublished
     comfy_cms_pages(:child).update_column(:is_published, false)
     get @index.url(relative: true)
