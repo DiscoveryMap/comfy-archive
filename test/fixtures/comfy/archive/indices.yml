@@ -3,3 +3,4 @@ default:
   label: Default Archive Index
   page: default
   datetime_fragment: publish_date
+  force_render_page: false

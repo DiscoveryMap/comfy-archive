@@ -14,7 +14,8 @@ class ArchiveIndicesTest < ActiveSupport::TestCase
   def new_params(options = {})
     { label:              "Test Archive Index",
       page:               @page,
-      datetime_fragment:  "publish_date"
+      datetime_fragment:  "publish_date",
+      force_render_page:  false
     }.merge(options)
   end
 
