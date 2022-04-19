@@ -24,7 +24,9 @@ class ActiveSupport::TestCase
 
   def reset_config
     ComfyArchive.configure do |config|
-      config.posts_per_page   = 10
+      config.posts_per_page                 = 10
+      config.require_category_path_keyword  = true
+      config.redirect_category_path_keyword = false
     end
   end
 
@@ -81,6 +83,14 @@ class ActionDispatch::IntegrationTest
     send(method, path, options)
   end
 
+  # Allow drawing, calling new, and restoring routes to default state.
+  #   See: https://stackoverflow.com/a/27083128
+  def with_routing(&block)
+    yield ComfyArchive::Application.routes
+  ensure
+    reset_config  # Note: without resetting the config, the reloaded routes will still have the same dynamic routes applied
+    ComfyArchive::Application.routes_reloader.reload!
+  end
 end
 
 class Rails::Generators::TestCase

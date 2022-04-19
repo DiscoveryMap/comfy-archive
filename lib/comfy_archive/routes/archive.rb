@@ -9,8 +9,16 @@ class ActionDispatch::Routing::Mapper
           o.get "*cms_path/:year",          to: "index#index", as: :pages_of_year
           o.get "*cms_path/:year/:month",   to: "index#index", as: :pages_of_month
         end
-        get "*cms_path/category/:category", to: "index#index", as: :pages_of_category
-        get "(*cms_path)",                  to: "index#index", as: :render_page, action: "/:format"
+        #byebug if !ComfyArchive.config.require_category_path_keyword && ComfyArchive.config.redirect_category_path_keyword
+        if ComfyArchive.config.require_category_path_keyword
+          get "*cms_path/category/:category", to: "index#index", as: :pages_of_category
+        elsif ComfyArchive.config.redirect_category_path_keyword
+          get "*cms_path/category/:category", to: redirect("/%{cms_path}/%{category}")
+          get "*cms_path/:category", to: "index#index", as: :pages_of_category
+        else
+          get "*cms_path(/category)/:category", to: "index#index", as: :pages_of_category
+        end
+        get "(*cms_path)", to: "index#index", as: :render_page, action: "/:format"
       end
     end
   end

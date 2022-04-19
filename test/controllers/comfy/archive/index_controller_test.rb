@@ -137,6 +137,161 @@ class Comfy::Archive::IndexControllerTest < ActionDispatch::IntegrationTest
     assert assigns(:archive_pages).first.categories.member? @category
   end
 
+  def test_get_index_with_require_and_not_redirect_category_path_keyword_with_category
+    assert ComfyArchive.config.require_category_path_keyword
+    assert_not ComfyArchive.config.redirect_category_path_keyword
+    @category.categorizations.create!(categorized: @index.children.first)
+
+    assert_match "/category/", comfy_archive_pages_of_category_path(@index.url(relative: true), @category.label)
+    get comfy_archive_pages_of_category_path(@index.url(relative: true), @category.label)
+
+    assert_response :success
+    assert_template :index
+    assert_equal @category.label, assigns(:category)
+    assert assigns(:archive_pages)
+    assert_equal 1, assigns(:archive_pages).count
+    assert assigns(:archive_pages).first.categories.member? @category
+  end
+
+  def test_get_index_with_require_and_not_redirect_category_path_keyword_with_invalid_category
+    assert ComfyArchive.config.require_category_path_keyword
+    assert_not ComfyArchive.config.redirect_category_path_keyword
+    assert_match "/category/", comfy_archive_pages_of_category_path(@index.url(relative: true), @category.label)
+    get comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid")
+    assert_response :success
+    assert_template :index
+    assert_equal "invalid", assigns(:category)
+    assert assigns(:archive_pages)
+    assert_equal 0, assigns(:archive_pages).count
+  end
+
+  def test_get_index_without_require_and_not_redirect_category_path_keyword_with_category
+    ComfyArchive.config.require_category_path_keyword = false
+    with_routing do |set|
+      set.draw do
+        comfy_route :archive_admin
+        comfy_route :archive
+      end
+      assert_not ComfyArchive.config.require_category_path_keyword
+      assert_not ComfyArchive.config.redirect_category_path_keyword
+      @category.categorizations.create!(categorized: @index.children.first)
+
+      # even though the 'category' keyword in the path is optional, the path helper will still include it
+      assert_match "/category/", comfy_archive_pages_of_category_path(@index.url(relative: true), @category.label)
+      get comfy_archive_pages_of_category_path(@index.url(relative: true), @category.label)
+
+      assert_response :success
+      assert_template :index
+      assert_equal @category.label, assigns(:category)
+      assert assigns(:archive_pages)
+      assert_equal 1, assigns(:archive_pages).count
+      assert assigns(:archive_pages).first.categories.member? @category
+
+      # manually re-test without the 'category' keyword in the path
+      get "#{@index.url(relative: true)}/#{@category.label}"
+
+      assert_response :success
+      assert_template :index
+      assert_equal @category.label, assigns(:category)
+      assert assigns(:archive_pages)
+      assert_equal 1, assigns(:archive_pages).count
+      assert assigns(:archive_pages).first.categories.member? @category
+    end
+  end
+
+  def test_get_index_without_require_and_not_redirect_category_path_keyword_with_invalid_category
+    ComfyArchive.config.require_category_path_keyword = false
+    with_routing do |set|
+      set.draw do
+        comfy_route :archive_admin
+        comfy_route :archive
+      end
+      assert_not ComfyArchive.config.require_category_path_keyword
+      assert_not ComfyArchive.config.redirect_category_path_keyword
+
+      # even though the 'category' keyword in the path is optional, the path helper will still include it
+      assert_match "/category/", comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid")
+      get comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid")
+
+      assert_response :success
+      assert_template :index
+      assert_equal "invalid", assigns(:category)
+      assert assigns(:archive_pages)
+      assert_equal 0, assigns(:archive_pages).count
+
+      # manually re-test without the 'category' keyword in the path
+      get "#{@index.url(relative: true)}/invalid"
+
+      assert_response :success
+      assert_template :index
+      assert_equal "invalid", assigns(:category)
+      assert assigns(:archive_pages)
+      assert_equal 0, assigns(:archive_pages).count
+    end
+  end
+
+  def test_get_index_without_require_and_with_redirect_category_path_keyword_with_category
+    ComfyArchive.config.require_category_path_keyword = false
+    ComfyArchive.config.redirect_category_path_keyword = true
+    with_routing do |set|
+      set.draw do
+        comfy_route :archive_admin
+        comfy_route :archive
+      end
+      assert_not ComfyArchive.config.require_category_path_keyword
+      assert ComfyArchive.config.redirect_category_path_keyword
+      @category.categorizations.create!(categorized: @index.children.first)
+
+      # without 'category' keyword, it should load normally
+      assert_no_match "/category/", comfy_archive_pages_of_category_path(@index.url(relative: true), @category.label)
+      assert_recognizes({ controller: "comfy/archive/index", action: "index", category: @category.label, cms_path: @index.url(relative: true).sub(/^\//, "") }, path: comfy_archive_pages_of_category_path(@index.url(relative: true), @category.label), method: :get)
+      get comfy_archive_pages_of_category_path(@index.url(relative: true), @category.label)
+
+      assert_response :success
+      assert_template :index
+      assert_equal @category.label, assigns(:category)
+      assert assigns(:archive_pages)
+      assert_equal 1, assigns(:archive_pages).count
+      assert assigns(:archive_pages).first.categories.member? @category
+
+      # with 'category' keyword, it should redirect
+      get "#{@index.url(relative: true)}/category/#{@category.label}"
+
+      assert_response :redirect
+      assert_redirected_to comfy_archive_pages_of_category_url(@index.url(relative: true).sub(/^\//, ""), @category.label)
+    end
+  end
+
+  def test_get_index_without_require_and_with_redirect_category_path_keyword_with_invalid_category
+    ComfyArchive.config.require_category_path_keyword = false
+    ComfyArchive.config.redirect_category_path_keyword = true
+    with_routing do |set|
+      set.draw do
+        comfy_route :archive_admin
+        comfy_route :archive
+      end
+      assert_not ComfyArchive.config.require_category_path_keyword
+      assert ComfyArchive.config.redirect_category_path_keyword
+
+      # without 'category' keyword, it should load normally
+      assert_no_match "/category/", comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid")
+      assert_recognizes({ controller: "comfy/archive/index", action: "index", category: "invalid", cms_path: @index.url(relative: true).sub(/^\//, "") }, path: comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid"), method: :get)
+      get comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid")
+
+      assert_response :success
+      assert_template :index
+      assert_equal "invalid", assigns(:category)
+      assert assigns(:archive_pages)
+      assert_equal 0, assigns(:archive_pages).count
+
+      # with 'category' keyword, it should redirect
+      get "#{@index.url(relative: true)}/category/invalid"
+
+      assert_response :redirect
+      assert_redirected_to comfy_archive_pages_of_category_url(@index.url(relative: true).sub(/^\//, ""), "invalid")
+    end
+  end
+
   def test_get_show
     @index.children.first.fragments.create!(
       identifier: "content",
