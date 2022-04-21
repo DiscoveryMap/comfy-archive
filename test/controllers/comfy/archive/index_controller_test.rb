@@ -58,9 +58,30 @@ class Comfy::Archive::IndexControllerTest < ActionDispatch::IntegrationTest
   end
 
   def test_get_index_with_category_invalid
+    assert ComfyArchive.config.strict_categories
     assert_not ComfyArchive.config.parameterize_category
-    assert_exception_raised ActionController::RoutingError, "Page Not Found at: \"#{comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid".parameterize).sub(/\/+/, '')}\"" do
-      get comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid")
+    assert_exception_raised ActionController::RoutingError, "Page Not Found at: \"#{comfy_archive_pages_of_category_path(@index.url(relative: true), CGI.escape("Invalid Category")).sub(/\/+/, '')}\"" do
+      get comfy_archive_pages_of_category_path(@index.url(relative: true), CGI.escape("Invalid Category"))
+    end
+  end
+
+  def test_get_index_with_category_invalid_not_strict
+    ComfyArchive.config.strict_categories = false
+    with_routing do |set|
+      set.draw do
+        comfy_route :archive_admin
+        comfy_route :archive
+      end
+      assert_not ComfyArchive.config.strict_categories
+      assert_not ComfyArchive.config.parameterize_category
+
+      get comfy_archive_pages_of_category_path(@index.url(relative: true), "Invalid Category")
+      assert_response :success
+      assert_template :index
+      assert_equal "Invalid Category", assigns(:category).label
+      assert assigns(:category).new_record?
+      assert assigns(:archive_pages)
+      assert_equal 0, assigns(:archive_pages).count
     end
   end
 
@@ -93,11 +114,33 @@ class Comfy::Archive::IndexControllerTest < ActionDispatch::IntegrationTest
         comfy_route :archive_admin
         comfy_route :archive
       end
+      assert ComfyArchive.config.strict_categories
       assert ComfyArchive.config.parameterize_category
 
-      assert_exception_raised ActionController::RoutingError, "Page Not Found at: \"#{comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid".parameterize).sub(/^\/+/, '')}\"" do
-        get comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid".parameterize)
+      assert_exception_raised ActionController::RoutingError, "Page Not Found at: \"#{comfy_archive_pages_of_category_path(@index.url(relative: true), "Invalid Category".parameterize).sub(/^\/+/, '')}\"" do
+        get comfy_archive_pages_of_category_path(@index.url(relative: true), "Invalid Category".parameterize)
       end
+    end
+  end
+
+  def test_get_index_with_parameterized_category_invalid_not_strict
+    ComfyArchive.config.parameterize_category = true
+    ComfyArchive.config.strict_categories = false
+    with_routing do |set|
+      set.draw do
+        comfy_route :archive_admin
+        comfy_route :archive
+      end
+      assert_not ComfyArchive.config.strict_categories
+      assert ComfyArchive.config.parameterize_category
+
+      get comfy_archive_pages_of_category_path(@index.url(relative: true), "Invalid Category")
+      assert_response :success
+      assert_template :index
+      assert_equal "Invalid Category", assigns(:category).label
+      assert assigns(:category).new_record?
+      assert assigns(:archive_pages)
+      assert_equal 0, assigns(:archive_pages).count
     end
   end
 

@@ -26,6 +26,7 @@ class ActiveSupport::TestCase
     ComfyArchive.configure do |config|
       config.posts_per_page         = 10
       config.parameterize_category  = false
+      config.strict_categories      = true
     end
   end
 

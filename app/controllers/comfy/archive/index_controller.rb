@@ -49,11 +49,15 @@ class Comfy::Archive::IndexController < Comfy::Cms::ContentController
   def load_category
     @category = ComfyArchive.config.parameterize_category ? find_cms_category_by_parameterized_label(params[:category]) : Comfy::Cms::Category.find_by(label: CGI.unescape(params[:category]))
     unless @category
-      if find_cms_page_by_full_path("/404")
-        render_page(:not_found)
+      if ComfyArchive.config.strict_categories
+        if find_cms_page_by_full_path("/404")
+          render_page(:not_found)
+        else
+          message = "Page Not Found at: \"#{params[:cms_path]}/category/#{params[:category]}\""
+          raise ActionController::RoutingError, message
+        end
       else
-        message = "Page Not Found at: \"#{params[:cms_path]}/category/#{params[:category]}\""
-        raise ActionController::RoutingError, message
+        @category = Comfy::Cms::Category.new(label: ComfyArchive.config.parameterize_category ? params[:category].gsub('-', ' ').titleize : CGI.unescape(params[:category]))
       end
     end
   end
