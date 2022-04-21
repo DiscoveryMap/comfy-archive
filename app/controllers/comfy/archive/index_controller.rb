@@ -22,8 +22,8 @@ class Comfy::Archive::IndexController < Comfy::Cms::ContentController
           scope = scope.for_month(@cms_index.datetime_fragment, @month)
         end
       elsif params[:category]
-        @category = CGI.unescape(params[:category])
-        scope = scope.for_category(@category).distinct(false)
+        load_category
+        scope = scope.for_category(@category.label).distinct(false)
       end
 
       @archive_pages = comfy_paginate(scope, per_page: ComfyArchive.config.posts_per_page)
@@ -44,6 +44,22 @@ class Comfy::Archive::IndexController < Comfy::Cms::ContentController
         @cms_index = Comfy::Archive::Index.find_by(page: @cms_page.parent)
       end
     end
+  end
+
+  def load_category
+    @category = ComfyArchive.config.parameterize_category ? find_cms_category_by_parameterized_label(params[:category]) : Comfy::Cms::Category.find_by(label: CGI.unescape(params[:category]))
+    unless @category
+      if find_cms_page_by_full_path("/404")
+        render_page(:not_found)
+      else
+        message = "Page Not Found at: \"#{params[:cms_path]}/category/#{params[:category]}\""
+        raise ActionController::RoutingError, message
+      end
+    end
+  end
+
+  def find_cms_category_by_parameterized_label(parameterized)
+    @cms_index.categories.find { |c| c.label.parameterize == parameterized }
   end
 
 end

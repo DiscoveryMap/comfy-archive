@@ -44,25 +44,61 @@ class Comfy::Archive::IndexControllerTest < ActionDispatch::IntegrationTest
   end
 
   def test_get_index_with_category
+    assert_not ComfyArchive.config.parameterize_category
     @category.categorizations.create!(categorized: @index.children.first)
 
     get comfy_archive_pages_of_category_path(@index.url(relative: true), @category.label)
 
     assert_response :success
     assert_template :index
-    assert_equal @category.label, assigns(:category)
+    assert_equal @category, assigns(:category)
     assert assigns(:archive_pages)
     assert_equal 1, assigns(:archive_pages).count
     assert assigns(:archive_pages).first.categories.member? @category
   end
 
   def test_get_index_with_category_invalid
-    get comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid")
-    assert_response :success
-    assert_template :index
-    assert_equal "invalid", assigns(:category)
-    assert assigns(:archive_pages)
-    assert_equal 0, assigns(:archive_pages).count
+    assert_not ComfyArchive.config.parameterize_category
+    assert_exception_raised ActionController::RoutingError, "Page Not Found at: \"#{comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid".parameterize).sub(/\/+/, '')}\"" do
+      get comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid")
+    end
+  end
+
+  def test_get_index_with_parameterized_category
+    ComfyArchive.config.parameterize_category = true
+    with_routing do |set|
+      set.draw do
+        comfy_route :archive_admin
+        comfy_route :archive
+      end
+      assert ComfyArchive.config.parameterize_category
+
+      @category.categorizations.create!(categorized: @index.children.first)
+
+      get comfy_archive_pages_of_category_path(@index.url(relative: true), @category.label.parameterize)
+
+      assert_response :success
+      assert_template :index
+      assert_equal @category, assigns(:category)
+      assert assigns(:archive_pages)
+      assert_equal 1, assigns(:archive_pages).count
+      assert assigns(:archive_pages).first.categories.member? @category
+    end
+  end
+
+  def test_get_index_with_parameterized_category_invalid
+    ComfyArchive.config.parameterize_category = true
+    with_routing do |set|
+      set.draw do
+        comfy_route :archive_admin
+        comfy_route :archive
+      end
+      assert ComfyArchive.config.parameterize_category
+
+      assert_exception_raised ActionController::RoutingError, "Page Not Found at: \"#{comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid".parameterize).sub(/^\/+/, '')}\"" do
+        get comfy_archive_pages_of_category_path(@index.url(relative: true), "invalid".parameterize)
+      end
+    end
   end
 
   def test_get_index_is_sorted
