@@ -1,5 +1,3 @@
-- require 'cgi'
-
 - site_path = @cms_index.url(relative: false)
 
 %h2
@@ -23,9 +21,8 @@
   - raise NotImplementedError, "Unknown adapter type '#{ActiveRecord::Base.connection.adapter_name}'"
 - dates.each do |(year, month)|
   %li
-    - date = [I18n.t("date.month_names")[month.to_i], year].join(" ")
-    = link_to date, comfy_archive_pages_of_month_path(site_path, year: year, month: month)
+    = comfy_archive_link_to_month year, month
 
 %h4 Categories
 - @cms_index.categories(true).each do |category|
-  = link_to category.label, comfy_archive_pages_of_category_path(site_path, category: CGI.escape(category.label))
+  = comfy_archive_link_to_category category
