@@ -12,7 +12,7 @@ Make sure that you have [ComfortableMexicanSofa](https://github.com/comfy/comfor
 
 1) Add gem definition to your Gemfile:
 
-    gem "comfy_archive", "~> 0.2.0"
+    gem "comfy_archive", "~> 0.3.0"
 
 2) From your Rails project's root run:
 
@@ -45,4 +45,4 @@ Make sure that you have [ComfortableMexicanSofa](https://github.com/comfy/comfor
 
 ---
 
-Copyright (c) 2019 Discovery Map International, Inc.
+Copyright (c) 2019-2022 Discovery Map International, Inc.
