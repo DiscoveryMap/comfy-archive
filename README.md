@@ -25,17 +25,20 @@ Make sure that you have [ComfortableMexicanSofa](https://github.com/comfy/comfor
     comfy_route :archive_admin
     comfy_route :archive
 
-4) You should also find view templates in your `/app/views/comfy/archive` folder. Feel free to adjust them as you see fit.
+4) You should also find view templates in your `/app/views/comfy/archive` folder. Feel free to adjust them as you see fit
 
 ## Configuration
 
-1) Add a `datetime` tag to the layout used by any page which will be ordered chronologically under an index page, then set the field to a valid date & time in the pages themselves.
+1) Add a `datetime` tag to the layout used by any page which will be ordered chronologically under an index page, then set the field to a valid date & time in the pages themselves
 
 2) Add a new Archive Index, selecting the parent page (_Important_: can not be the root page!) which will act as an index for child pages and enter the name of the `datetime` tag you created in Step 1
+
+3) Optionally, create a `config/initializers/comfy_archive.rb` file to override default configuration options
 
 ## Architecture
 
 * `ComfyArchive`: Rails Engine which manages configuration, adds scopes & associations to `Comfy::Cms::Site` & `Comfy::Cms::Page` models, and adds route matching methods
+* `Comfy::ArchiveHelper`: Helper methods for generating links to chronological & category archive pages
 * `Comfy::Archive::Index`: A model which represents pages which will become chronological archive pages, it has a `Comfy::Cms::Page` association and also the name of the page's `datetime` fragment to use for chronological ordering
 * `Comfy::Admin::Archive::IndicesController`: A Comfortable Mexican Sofa admin controller for managing `Comfy::Archive::Index` models
 * `Comfy::Archive::IndexController`: A controller for rendering `Comfy::Archive::Index` pages, plus chronological & categorical archive pages
